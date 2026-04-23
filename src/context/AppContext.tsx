@@ -26,7 +26,7 @@ interface AppContextType {
   joinCourt: (courtId: string) => void;
   leaveCourt: (courtId: string) => void;
   
-  createGame: (courtId: string, gameType: Court['currentGameType'], skillLevel: Court['skillLevel']) => void;
+  createGame: (courtId: string, gameType: '3v3' | '4v4' | '5v5', skillLevel: 'Casual' | 'Competitive' | 'Elite') => void;
   joinGame: (gameId: string) => void;
   leaveGame: (gameId: string) => void;
   
@@ -142,7 +142,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }));
   }, []);
 
-  const createGame = useCallback((courtId: string, gameType: Court['currentGameType'], skillLevel: Court['skillLevel']) => {
+  const createGame = useCallback((courtId: string, gameType: '3v3' | '4v4' | '5v5', skillLevel: 'Casual' | 'Competitive' | 'Elite') => {
     const court = courts.find(c => c.id === courtId);
     if (!court) return;
     
@@ -216,7 +216,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       shareable: true
     };
     setPosts(prev => [newPost, ...prev]);
-  }, []);
+  }, [user]);
 
   const deletePost = useCallback((postId: string) => {
     setPosts(prev => prev.filter(p => p.id !== postId));
@@ -237,7 +237,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const addCourt = useCallback((court: Court) => {
-    setCourts(prev => [court, ...prev]);
+    const newCourt: Court = {
+      ...court,
+      id: court.id || `c${Date.now()}`,
+      currentPlayers: 0,
+      waitTimeMins: 0,
+      activePlayers: []
+    };
+    setCourts(prev => [newCourt, ...prev]);
   }, []);
 
   const updateCourt = useCallback((courtId: string, updates: Partial<Court>) => {
