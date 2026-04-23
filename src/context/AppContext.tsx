@@ -76,7 +76,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [sortBy, setSortBy] = useState<SortOption>(() => loadLocal('sortBy', 'distance'));
   const [filterSkill, setFilterSkill] = useState<SkillFilter>(() => loadLocal('filterSkill', 'all'));
   const [searchQuery, setSearchQuery] = useState('');
-  const [user, setUser] = useState<User>(() => loadLocal('user', user));
+  const [user, setUser] = useState<User>(() => loadLocal('user', currentUser));
   
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
