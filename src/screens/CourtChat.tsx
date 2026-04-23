@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Send, Mic } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
-import { Input } from '../components/ui/input';
-import { Button } from '../components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
+import { Input } from '../../components/ui/input';
+import { Button } from '../../components/ui/button';
 import { useApp } from '../context/AppContext';
 
 interface CourtChatProps {
@@ -19,29 +19,44 @@ export function CourtChat({ courtId, onBack, onChatSelect }: CourtChatProps) {
   if (!courtId) {
     // List view
     return (
-      <div className="flex flex-col h-full bg-[#0A0A0A] pb-20">
-        <header className="px-4 py-4 pt-safe relative z-10 border-b border-white/10 bg-[#0A0A0A] text-white font-bold text-sm tracking-widest uppercase">
-          Chats.
+<div className="flex flex-col h-full bg-[#0A0A0A] pb-20">
+        <header className="px-4 py-4 pt-safe relative z-10 border-b border-white/10 bg-[#0A0A0A]">
+          <h1 className="text-xl font-bold tracking-tight text-white">Chats</h1>
+          <p className="text-white/40 text-[10px] mt-1">Court Conversations</p>
         </header>
-        <div className="flex-1 overflow-y-auto overscroll-y-contain scrollbar-hide p-4">
-           {courts.map(court => (
-             <button 
-                key={court.id}
-                onClick={() => onChatSelect(court.id)}
-                className="w-full flex items-center gap-4 p-4 border-b border-white/10/50 hover:bg-[#161616] transition-colors"
-             >
-                <div className="w-12 h-12 rounded-full border border-white/20 overflow-hidden shrink-0">
-                  <img src={court.imageUrl} className="w-full h-full object-cover" alt={court.name} />
-                </div>
-                <div className="flex-1 text-left flex flex-col justify-center">
-                   <div className="flex justify-between items-center mb-1">
-                      <h3 className="text-xs font-bold text-white tracking-widest uppercase leading-none">{court.name}</h3>
-                      <span className="text-[10px] font-mono text-emerald-400">2:20 PM</span>
-                   </div>
-                   <p className="text-sm text-white/60 line-clamp-1">I call next game!</p>
-                </div>
-             </button>
-           ))}
+        <div className="flex-1 overflow-y-auto p-4">
+           {courts.length === 0 ? (
+             <div className="text-center py-12 text-white/40">
+               <p className="text-sm">No chats yet</p>
+               <p className="text-[10px] text-white/30 mt-1">Join a court to start chatting</p>
+             </div>
+           ) : (
+            courts.map(court => {
+              const lastMsg = chats[court.id]?.slice(-1)[0];
+              return (
+              <button 
+                 key={court.id}
+                 onClick={() => onChatSelect(court.id)}
+                 className="w-full flex items-center gap-4 p-4 border-b border-white/5 hover:bg-white/5 transition-colors rounded-lg mb-2"
+              >
+                 <div className="w-12 h-12 rounded-full border border-white/20 overflow-hidden shrink-0 bg-[#161616] flex items-center justify-center">
+                   {court.imageUrl ? (
+                     <img src={court.imageUrl} className="w-full h-full object-cover" alt={court.name} />
+                   ) : (
+                     <span className="text-lg">🏀</span>
+                   )}
+                 </div>
+                 <div className="flex-1 text-left min-w-0">
+                    <div className="flex justify-between items-center mb-1">
+                       <h3 className="text-sm font-bold text-white truncate">{court.name}</h3>
+                       {lastMsg && <span className="text-[10px] text-white/40">{lastMsg.timestamp}</span>}
+                    </div>
+                    <p className="text-xs text-white/50 truncate">{lastMsg?.text || 'No messages yet'}</p>
+                 </div>
+              </button>
+              );
+            })
+           )}
         </div>
       </div>
     );
@@ -88,7 +103,7 @@ export function CourtChat({ courtId, onBack, onChatSelect }: CourtChatProps) {
                 )}
                 <div className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[75%]`}>
                   {!isMe && <span className="text-[10px] text-white/40 mb-1 ml-1">{msg.user.username}</span>}
-                  <div className={`p-3 rounded-2xl ${isMe ? 'bg-orange-600 text-white rounded-br-sm' : 'bg-white/5 text-slate-200 rounded-bl-sm'} text-sm`}>
+                  <div className={`p-3 rounded-2xl ${isMe ? 'bg-red-600 text-white rounded-br-sm' : 'bg-white/5 text-slate-200 rounded-bl-sm'} text-sm`}>
                     {msg.text}
                   </div>
                   <span className="text-[10px] text-white/30 mt-1 mr-1">{msg.timestamp}</span>
@@ -114,7 +129,7 @@ export function CourtChat({ courtId, onBack, onChatSelect }: CourtChatProps) {
         </div>
         <Button 
           onClick={handleSend}
-          className="w-10 h-10 rounded bg-orange-600 hover:bg-orange-500 text-black p-0 flex items-center justify-center shrink-0"
+          className="w-10 h-10 rounded bg-red-600 hover:bg-red-500 text-black p-0 flex items-center justify-center shrink-0"
         >
           <Send size={18} className="translate-x-[1px] translate-y-[-1px]" />
         </Button>

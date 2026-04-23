@@ -1,6 +1,6 @@
 import React from 'react';
 import { MapPin, Users, Clock, Navigation2 } from 'lucide-react';
-import { Button } from '../components/ui/button';
+import { Button } from '../../components/ui/button';
 import { useApp } from '../context/AppContext';
 
 interface CourtMapProps {

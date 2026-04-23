@@ -1,6 +1,5 @@
 import React from 'react';
-import { Home, MapPin, Play, MessageSquare, User } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { Home, MapPin, Play, MessageSquare, User, Star } from 'lucide-react';
 
 interface NavigationProps {
   currentScreen: string;
@@ -10,7 +9,7 @@ interface NavigationProps {
 export function Navigation({ currentScreen, setCurrentScreen }: NavigationProps) {
   const tabs = [
     { id: 'home', label: 'Home', icon: Home },
-    { id: 'map', label: 'Map', icon: MapPin },
+    { id: 'courts', label: 'Courts', icon: MapPin },
     { id: 'play', label: 'Play', icon: Play },
     { id: 'chats', label: 'Chats', icon: MessageSquare },
     { id: 'profile', label: 'Profile', icon: User },
@@ -25,10 +24,9 @@ export function Navigation({ currentScreen, setCurrentScreen }: NavigationProps)
           <button
             key={tab.id}
             onClick={() => setCurrentScreen(tab.id)}
-            className={cn(
-              "flex flex-col items-center justify-center space-y-1 w-16 transition-colors",
-              isActive ? "text-orange-500" : "hover:text-white"
-            )}
+            className={`flex flex-col items-center justify-center space-y-1 w-16 transition-colors ${
+              isActive ? 'text-red-500' : 'hover:text-white'
+            }`}
           >
             <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
             <span className="text-[10px] font-medium">{tab.label}</span>
